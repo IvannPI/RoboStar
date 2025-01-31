@@ -12,6 +12,7 @@ PS2X gamepad;
 Emakefun_MotorDriver MotorDriver = Emakefun_MotorDriver(0x60);
 Emakefun_DCMotor RMotor, LMotor;
 Emakefun_Servo Lift1, Lift2;
+bool Lift1Status = 0, Lift2Status = 0;
 
 
 void goMotor(Emakefun_DCMotor port, int speed, char debug[] = "") {
@@ -29,7 +30,7 @@ void goMotor(Emakefun_DCMotor port, int speed, char debug[] = "") {
 }
 
 void goMotor(Emakefun_Servo port, uint8_t angle, char debug[] = "") {
-  goMotor(port, angle);
+  port.writeServo(angle);
   if (debug != "") {
     Serial.println(debug);
   }
@@ -49,12 +50,15 @@ void goMotorAtButton(Emakefun_DCMotor port, int speed,
   }
 }
 
-void goMotorAtButton(Emakefun_Servo port, uint8_t angleUp, uint8_t angleDown,
-                     uint16_t buttonUp, char debugUp[] = "", char debugDown[] = "") {
-  if (gamepad.ButtonDataByte() && gamepad.Button(buttonUp)) {
-    goMotor(port, angleDown);
-  } else {
-    goMotor(port, angleUp);
+void goMotorAtButton(Emakefun_Servo port, uint8_t angleUp, uint8_t angleDown, bool status,
+                     uint16_t button, char debugUp[] = "", char debugDown[] = "") {
+  if (gamepad.ButtonDataByte() && gamepad.Button(button)) {
+    if (status) {
+      goMotor(port, angleUp, debugUp);
+    } else {
+      goMotor(port, angleDown, debugDown);
+    }
+    status = !status;
   }
 }
 
@@ -78,8 +82,8 @@ void gamepadMode() {
   gamepad.read_gamepad(false, 0);
   goMotorAtAnalog(RMotor, 100, PSS_RY, "right speed");
   goMotorAtAnalog(LMotor, 100, PSS_LY, "left speed" );
-  goMotorAtButton(Lift1, 100, 0, PSB_TRIANGLE, "lift up", "lift down");
-  goMotorAtButton(Lift2, 0, 100, PSB_TRIANGLE, "lift up", "lift down");
+  goMotorAtButton(Lift1, 100, 0, PSB_TRIANGLE, Lift1Status, "lift up", "lift down");
+  goMotorAtButton(Lift2, 0, 100, PSB_TRIANGLE, Lift2Status, "lift up", "lift down");
   delay(50);
 }
 
