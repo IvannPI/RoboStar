@@ -10,7 +10,7 @@ PS2X gamepad;
 #define rumble    false
 
 Emakefun_MotorDriver MotorDriver = Emakefun_MotorDriver(0x60);
-Emakefun_DCMotor RMotor, LMotor;
+Emakefun_DCMotor RMotor, LMotor, Lift;
 Emakefun_Servo Taker1, Taker2;
 bool Taker1Status = 0, Taker2Status = 0;
 
@@ -83,8 +83,9 @@ void gamepadMode() {
   gamepad.read_gamepad(false, 0);
   goMotorAtAnalog(RMotor, 100, PSS_RY, "right speed");
   goMotorAtAnalog(LMotor, 100, PSS_LY, "left speed" );
-  goMotorAtButton(Taker1, 100, 0, Taker1Status, PSB_TRIANGLE, "lift up", "lift down");
-  goMotorAtButton(Taker2, 0, 100, Taker2Status, PSB_TRIANGLE, "lift up", "lift down");
+  goMotorAtButton(Taker1, 100, 0, Taker1Status, PSB_TRIANGLE, "taker up", "taker down");
+  goMotorAtButton(Taker2, 0, 100, Taker2Status, PSB_TRIANGLE, "taker up", "taker down");
+  goMotorAtButton(Lift, 100, PSB_R1, PSB_R2, "lift up", "lift down");
   delay(50);
 }
 
