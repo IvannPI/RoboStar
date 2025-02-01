@@ -12,7 +12,7 @@ PS2X gamepad;
 Emakefun_MotorDriver MotorDriver = Emakefun_MotorDriver(0x60);
 Emakefun_DCMotor RMotor, LMotor;
 Emakefun_Servo Lift1, Lift2;
-bool LiftStatus = 0;
+bool Lift1Status = 0, Lift2Status = 0;
 
 
 void goMotor(Emakefun_DCMotor port, int speed, char debug[] = "") {
@@ -50,9 +50,9 @@ void goMotorAtButton(Emakefun_DCMotor port, int speed,
   }
 }
 
-void goMotorAtButton(Emakefun_Servo port, uint8_t angleUp, uint8_t angleDown, bool status,
+void goMotorAtButton(Emakefun_Servo port, uint8_t angleUp, uint8_t angleDown, bool &status,
                      uint16_t button, char debugUp[] = "", char debugDown[] = "") {
-  if (gamepad.ButtonDataByte() && gamepad.Button(button)) {
+  if (gamepad.ButtonDataByte() && gamepad.ButtonPressed(button)) {
     if (status) {
       goMotor(port, angleUp, debugUp);
     } else {
@@ -63,11 +63,12 @@ void goMotorAtButton(Emakefun_Servo port, uint8_t angleUp, uint8_t angleDown, bo
 }
 
 void goMotorAtAnalog(Emakefun_DCMotor port, int speed, uint16_t analog, char debug[] = "") {
-  goMotor(port, map(127.5 - gamepad.Analog(analog), -127.5, 127.5, -speed, speed));
-  if (debug != "") {
+  long angle = map(127.5 - gamepad.Analog(analog), -127.5, 127.5, -speed, speed);
+  goMotor(port, angle);
+  if (debug != "" && angle) {
     Serial.print(debug);
     Serial.print(':');
-    Serial.println(map(127.5 - gamepad.Analog(analog), -127.5, 127.5, -speed, speed));
+    Serial.println(angle);
   }
 }
 
@@ -82,8 +83,8 @@ void gamepadMode() {
   gamepad.read_gamepad(false, 0);
   goMotorAtAnalog(RMotor, 100, PSS_RY, "right speed");
   goMotorAtAnalog(LMotor, 100, PSS_LY, "left speed" );
-  goMotorAtButton(Lift1, 100, 0, PSB_TRIANGLE, LiftStatus, "lift up", "lift down");
-  goMotorAtButton(Lift2, 0, 100, PSB_TRIANGLE, LiftStatus, "lift up", "lift down");
+  goMotorAtButton(Lift1, 100, 0, Lift1Status, PSB_TRIANGLE, "lift up", "lift down");
+  goMotorAtButton(Lift2, 0, 100, Lift2Status, PSB_TRIANGLE, "lift up", "lift down");
   delay(50);
 }
 
@@ -95,6 +96,9 @@ void setup() {
   LMotor = *MotorDriver.getMotor(M2);
   Lift1  = *MotorDriver.getServo(1);
   Lift2  = *MotorDriver.getServo(2);
+
+  goMotor(Lift1, 100);
+  goMotor(Lift2, 0);  
 
   gamepad.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
 }
