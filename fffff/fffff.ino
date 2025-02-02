@@ -129,13 +129,11 @@ void setup() {
 
 void loop() {
   gamepadMode();
-  delay(100);
   // dis = Laser.getDistance();
   
   // Serial.println(dis);
   // delay(100);
-  /*Serial.println("===============================================================");
-  Serial.print("R=");
+Serial.print("R=");
   Serial.println(MXColor1.getColor(R));
   Serial.print("G=");
   Serial.println(MXColor1.getColor(G));
@@ -149,6 +147,5 @@ void loop() {
   Serial.println(MXColor1.getColor(Y));
   Serial.print("K=");
   Serial.println(MXColor1.getColor(K));
-  delay(1000);*/
-  
+  delay(1000);*/  
 }
