@@ -1,5 +1,10 @@
 #include <Emakefun_MotorDriver.h>
 #include <PS2X_lib.h>  //for v1.6
+#include <MatrixLaserSensor.h>
+#include <MatrixColorSensor.h>
+
+MatrixLaser Laser;
+MatrixColor MXColor1;
 
 PS2X gamepad;
 #define PS2_DAT 12
@@ -103,8 +108,47 @@ void setup() {
   goMotor(Taker2, 0);   // ┴ taker to zero position
 
   gamepad.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
+
+
+  if (Laser.begin()){
+    Serial.println("Matirx Laser Sensor activated");
+  }
+  else{
+    Serial.println("Matirx Laser Sensor activation failed");
+  }
+  if (MXColor1.begin()){
+    Serial.println("Matirx Color Sensor activated");
+  }
+  else{
+    Serial.println("Matirx Color Sensor activation failed");
+  }
+  MXColor1.setLight(true, true, 0);
+  MXColor1.setGamma(true);
+
 }
 
 void loop() {
   gamepadMode();
+  delay(100);
+  // dis = Laser.getDistance();
+  
+  // Serial.println(dis);
+  // delay(100);
+  /*Serial.println("===============================================================");
+  Serial.print("R=");
+  Serial.println(MXColor1.getColor(R));
+  Serial.print("G=");
+  Serial.println(MXColor1.getColor(G));
+  Serial.print("B=");
+  Serial.println(MXColor1.getColor(B));
+  Serial.print("C=");
+  Serial.println(MXColor1.getColor(C));
+  Serial.print("M=");
+  Serial.println(MXColor1.getColor(M));
+  Serial.print("Y=");
+  Serial.println(MXColor1.getColor(Y));
+  Serial.print("K=");
+  Serial.println(MXColor1.getColor(K));
+  delay(1000);*/
+  
 }
