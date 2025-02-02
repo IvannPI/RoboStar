@@ -88,8 +88,10 @@ void gamepadMode() {
   gamepad.read_gamepad(false, 0);
   goMotorAtAnalog(RMotor, 255, PSS_RY, "right speed");
   goMotorAtAnalog(LMotor, 255, PSS_LY, "left speed" );
-  goMotorAtButton(Taker1, 100, 0, Taker1Status, PSB_TRIANGLE, "taker up", "taker down");
-  goMotorAtButton(Taker2, 0, 100, Taker2Status, PSB_TRIANGLE, "taker up", "taker down");
+  goMotorAtButton(Taker1, 180, 90,  Taker1Status, PSB_TRIANGLE, "taker up",   "taker zero");
+  goMotorAtButton(Taker2, 90,  0,   Taker2Status, PSB_TRIANGLE, "taker up",   "taker zero");
+  goMotorAtButton(Taker1, 0,   90,  Taker1Status, PSB_CROSS   , "taker down", "taker zero");
+  goMotorAtButton(Taker2, 90,  180, Taker2Status, PSB_CROSS   , "taker down", "taker zero");
   goMotorAtButton(Lift, 255, PSB_R1, PSB_R2, "lift up", "lift down");
   delay(50);
 }
