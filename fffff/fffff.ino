@@ -79,7 +79,7 @@ bool hasTouch(int port, char debug[] = "") {
   }
 }
 
-void gamepadMode() {   
+void gamepadMode() {
   gamepad.read_gamepad(false, 0);
   goMotorAtAnalog(RMotor, 255, PSS_RY, "right speed");
   goMotorAtAnalog(LMotor, 255, PSS_LY, "left speed" );
