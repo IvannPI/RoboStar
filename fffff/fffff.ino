@@ -99,8 +99,8 @@ void setup() {
   Taker1 = *MotorDriver.getServo(1);
   Taker2 = *MotorDriver.getServo(2);
 
-  goMotor(Taker1, 100);
-  goMotor(Taker2, 0);
+  goMotor(Taker1, 100); // ┐
+  goMotor(Taker2, 0);   // ┴ taker to zero position
 
   gamepad.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
 }
