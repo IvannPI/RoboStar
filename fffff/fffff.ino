@@ -88,10 +88,10 @@ void gamepadMode() {
   gamepad.read_gamepad(false, 0);
   goMotorAtAnalog(RMotor, 255, PSS_RY, "right speed");
   goMotorAtAnalog(LMotor, 255, PSS_LY, "left speed" );
-  goMotorAtButton(Taker1, 180, 90,  Taker1Status, PSB_TRIANGLE, "taker up",   "taker zero");
-  goMotorAtButton(Taker2, 90,  0,   Taker2Status, PSB_TRIANGLE, "taker up",   "taker zero");
-  goMotorAtButton(Taker1, 0,   90,  Taker1Status, PSB_CROSS   , "taker down", "taker zero");
-  goMotorAtButton(Taker2, 90,  180, Taker2Status, PSB_CROSS   , "taker down", "taker zero");
+  goMotorAtButton(Taker1, 180, 90,  Taker1Status, PSB_CROSS   , "taker down", "taker zero");
+  goMotorAtButton(Taker2, 0,   90,  Taker2Status, PSB_CROSS   , "taker down", "taker zero");
+  goMotorAtButton(Taker1, 90,  0,   Taker1Status, PSB_TRIANGLE, "taker zero", "taker up"  );
+  goMotorAtButton(Taker2, 90,  180, Taker2Status, PSB_TRIANGLE, "taker zero", "taker up"  );
   goMotorAtButton(Lift, 255, PSB_R1, PSB_R2, "lift up", "lift down");
   delay(50);
 }
@@ -106,8 +106,8 @@ void setup() {
   Taker1 = *MotorDriver.getServo(1);
   Taker2 = *MotorDriver.getServo(2);
 
-  goMotor(Taker1, 100); // ┐
-  goMotor(Taker2, 0);   // ┴ taker to zero position
+  goMotor(Taker1, 90); // ┐
+  goMotor(Taker2, 90); // ┴ taker to zero position
 
   gamepad.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
 
