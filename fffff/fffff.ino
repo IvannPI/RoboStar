@@ -92,7 +92,7 @@ void gamepadMode() {
   goMotorAtButton(Taker2, 0,   90,  Taker2Status, PSB_CROSS   , "taker down", "taker zero");
   goMotorAtButton(Taker1, 90,  0,   Taker1Status, PSB_TRIANGLE, "taker zero", "taker up"  );
   goMotorAtButton(Taker2, 90,  180, Taker2Status, PSB_TRIANGLE, "taker zero", "taker up"  );
-  goMotorAtButton(Lift, 255, PSB_R1, PSB_R2, "lift up", "lift down");
+  goMotorAtButton(Lift, 255, PSB_R2, PSB_R1, "lift down", "lift up");
   delay(50);
 }
 
