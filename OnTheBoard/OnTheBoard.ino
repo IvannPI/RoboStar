@@ -67,7 +67,7 @@ void goMotorAtButton(Emakefun_Servo port, uint8_t angleUp, uint8_t angleDown, bo
 
 void goMotorAtAnalog(Emakefun_DCMotor port, int speed, uint16_t analog, char debug[] = "") {
   long angle = map(127.5 - Gamepad.Analog(analog), -127.5, 127.5, -speed, speed);
-  goMotor(port, angle);
+  goMotor(port, angle); 
   if (debug != "" && angle) {
     Serial.print(debug);
     Serial.print(':');
@@ -84,8 +84,8 @@ void gamepadMode() {
   goMotorAtButton(Taker2, 0,   90,  Taker2Status, PSB_CROSS   , "taker down", "taker zero");
   goMotorAtButton(Taker1, 90,  0,   Taker1Status, PSB_TRIANGLE, "taker zero", "taker up"  );
   goMotorAtButton(Taker2, 90,  180, Taker2Status, PSB_TRIANGLE, "taker zero", "taker up"  );
-  goMotorAtButton(Lift1, 255, PSB_R2, PSB_R1, "lift down", "lift up");
-  goMotorAtButton(Lift2, -255, PSB_R2, PSB_R1, "lift down", "lift up");
+  goMotorAtButton(Lift1, -255, PSB_R2, PSB_R1, "lift down", "lift up");
+  goMotorAtButton(Lift2, 255, PSB_R2, PSB_R1, "lift down", "lift up");
   delay(50);
 }
 
