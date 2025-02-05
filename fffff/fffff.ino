@@ -6,7 +6,7 @@
 MatrixLaser Laser;
 MatrixColor MXColor1;
 
-PS2X gamepad;
+PS2X Gamepad;
 #define PS2_DAT 12
 #define PS2_CMD 11
 #define PS2_SEL 10
@@ -44,10 +44,10 @@ void goMotor(Emakefun_Servo port, uint8_t angle, char debug[] = "") {
 void goMotorAtButton(Emakefun_DCMotor port, int speed,
                      uint16_t buttonForward, uint16_t buttonBackward,
                      char debugForward[] = "", char debugBackward[] = "") {
-  if (gamepad.ButtonDataByte()) {
-    if (gamepad.Button(buttonForward)) {
+  if (Gamepad.ButtonDataByte()) {
+    if (Gamepad.Button(buttonForward)) {
       goMotor(port, speed, debugForward);
-    } else if (gamepad.Button(buttonBackward)) {
+    } else if (Gamepad.Button(buttonBackward)) {
       goMotor(port, -speed, debugBackward);
     }
   } else {
@@ -57,7 +57,7 @@ void goMotorAtButton(Emakefun_DCMotor port, int speed,
 
 void goMotorAtButton(Emakefun_Servo port, uint8_t angleUp, uint8_t angleDown, bool &status,
                      uint16_t button, char debugUp[] = "", char debugDown[] = "") {
-  if (gamepad.ButtonDataByte() && gamepad.ButtonPressed(button)) {
+  if (Gamepad.ButtonDataByte() && Gamepad.ButtonPressed(button)) {
     if (status) {
       goMotor(port, angleUp, debugUp);
     } else {
@@ -68,7 +68,7 @@ void goMotorAtButton(Emakefun_Servo port, uint8_t angleUp, uint8_t angleDown, bo
 }
 
 void goMotorAtAnalog(Emakefun_DCMotor port, int speed, uint16_t analog, char debug[] = "") {
-  long angle = map(127.5 - gamepad.Analog(analog), -127.5, 127.5, -speed, speed);
+  long angle = map(127.5 - Gamepad.Analog(analog), -127.5, 127.5, -speed, speed);
   goMotor(port, angle);
   if (debug != "" && angle) {
     Serial.print(debug);
@@ -85,7 +85,7 @@ bool hasTouch(int port, char debug[] = "") {
 }
 
 void gamepadMode() {
-  gamepad.read_gamepad(false, 0);
+  Gamepad.read_gamepad(false, 0);
   goMotorAtAnalog(RMotor, 255, PSS_RY, "right speed");
   goMotorAtAnalog(LMotor, 255, PSS_LY, "left speed" );
   goMotorAtButton(Taker1, 180, 90,  Taker1Status, PSB_CROSS   , "taker down", "taker zero");
@@ -109,7 +109,7 @@ void setup() {
   goMotor(Taker1, 90); // ┐
   goMotor(Taker2, 90); // ┴ taker to zero position
 
-  gamepad.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
+  Gamepad.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
 
 
   if (Laser.begin()){
@@ -131,21 +131,7 @@ void setup() {
 
 void loop() {
   gamepadMode();
-  /*dis = Laser.getDistance();
-  Serial.println(dis);
-  Serial.print("R=");
-  Serial.println(MXColor1.getColor(R));
-  Serial.print("G=");
-  Serial.println(MXColor1.getColor(G));
-  Serial.print("B=");
-  Serial.println(MXColor1.getColor(B));
-  Serial.print("C=");
-  Serial.println(MXColor1.getColor(C));
-  Serial.print("M=");
-  Serial.println(MXColor1.getColor(M));
-  Serial.print("Y=");
-  Serial.println(MXColor1.getColor(Y));
-  Serial.print("K=");
-  Serial.println(MXColor1.getColor(K));
-  delay(1000);*/  
+  if (Laser.getDistance() <= 100) {
+    tone(A0, 600);
+  }
 }
