@@ -1,10 +1,8 @@
 #include <Emakefun_MotorDriver.h>
 #include <PS2X_lib.h>  //for v1.6
 #include <MatrixLaserSensor.h>
-#include <MatrixColorSensor.h>
 
 MatrixLaser Laser;
-MatrixColor MXColor1;
 
 PS2X Gamepad;
 #define PS2_DAT 12
@@ -15,7 +13,7 @@ PS2X Gamepad;
 #define rumble    false
 
 Emakefun_MotorDriver MotorDriver = Emakefun_MotorDriver(0x60);
-Emakefun_DCMotor RMotor, LMotor, Lift;
+Emakefun_DCMotor RMotor, LMotor, Lift1, Lift2;
 Emakefun_Servo Taker1, Taker2;
 bool Taker1Status = 0, Taker2Status = 0;
 
@@ -77,12 +75,6 @@ void goMotorAtAnalog(Emakefun_DCMotor port, int speed, uint16_t analog, char deb
   }
 }
 
-bool hasTouch(int port, char debug[] = "") {
-  return digitalRead(port);
-  if (debug != "") {
-    Serial.println(debug);
-  }
-}
 
 void gamepadMode() {
   Gamepad.read_gamepad(false, 0);
@@ -92,7 +84,8 @@ void gamepadMode() {
   goMotorAtButton(Taker2, 0,   90,  Taker2Status, PSB_CROSS   , "taker down", "taker zero");
   goMotorAtButton(Taker1, 90,  0,   Taker1Status, PSB_TRIANGLE, "taker zero", "taker up"  );
   goMotorAtButton(Taker2, 90,  180, Taker2Status, PSB_TRIANGLE, "taker zero", "taker up"  );
-  goMotorAtButton(Lift, 255, PSB_R2, PSB_R1, "lift down", "lift up");
+  goMotorAtButton(Lift1, 255, PSB_R2, PSB_R1, "lift down", "lift up");
+  goMotorAtButton(Lift2, 255, PSB_R2, PSB_R1, "lift down", "lift up");
   delay(50);
 }
 
@@ -102,7 +95,8 @@ void setup() {
   MotorDriver.begin(50);
   RMotor = *MotorDriver.getMotor(M1);
   LMotor = *MotorDriver.getMotor(M2);
-  Lift   = *MotorDriver.getMotor(M3);
+  Lift1  = *MotorDriver.getMotor(M3);
+  Lift2  = *MotorDriver.getMotor(M4);
   Taker1 = *MotorDriver.getServo(1);
   Taker2 = *MotorDriver.getServo(2);
 
