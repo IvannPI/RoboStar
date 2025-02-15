@@ -1,10 +1,8 @@
 #include <Emakefun_MotorDriver.h>
-#include <PS2X_lib.h>  //for v1.6
+#include <PS2X_lib.h>
 #include <MatrixLaserSensor.h>
-#include <MatrixColorSensor.h>
 
 MatrixLaser Laser;
-MatrixColor MXColor1;
 
 PS2X Gamepad;
 #define PS2_DAT 12
@@ -15,9 +13,7 @@ PS2X Gamepad;
 #define rumble    false
 
 Emakefun_MotorDriver MotorDriver = Emakefun_MotorDriver(0x60);
-Emakefun_DCMotor RMotor, LMotor, Lift;
-Emakefun_Servo Taker1, Taker2;
-bool Taker1Status = 0, Taker2Status = 0;
+Emakefun_DCMotor RMotor, LMotor, UMotor, DMotor;
 
 
 void goMotor(Emakefun_DCMotor port, int speed, char debug[] = "") {
@@ -34,42 +30,16 @@ void goMotor(Emakefun_DCMotor port, int speed, char debug[] = "") {
   }
 }
 
-void goMotor(Emakefun_Servo port, uint8_t angle, char debug[] = "") {
-  port.writeServo(angle);
-  if (debug != "") {
-    Serial.println(debug);
-  }
-}
-
-void goMotorAtButton(Emakefun_DCMotor port, int speed,
-                     uint16_t buttonForward, uint16_t buttonBackward,
-                     char debugForward[] = "", char debugBackward[] = "") {
-  if (Gamepad.ButtonDataByte()) {
-    if (Gamepad.Button(buttonForward)) {
-      goMotor(port, speed, debugForward);
-    } else if (Gamepad.Button(buttonBackward)) {
-      goMotor(port, -speed, debugBackward);
-    }
-  } else {
-    goMotor(port, 0);
-  }
-}
-
-void goMotorAtButton(Emakefun_Servo port, uint8_t angleUp, uint8_t angleDown, bool &status,
-                     uint16_t button, char debugUp[] = "", char debugDown[] = "") {
-  if (Gamepad.ButtonDataByte() && Gamepad.ButtonPressed(button)) {
-    if (status) {
-      goMotor(port, angleUp, debugUp);
-    } else {
-      goMotor(port, angleDown, debugDown);
-    }
-    status = !status;
-  }
+void goRobot(int xAxis,int yAxis, int rotate) {
+  goMotor(RMotor);
+  goMotor(LMotor);
+  goMotor(UMotor);
+  goMotor(DMotor);
 }
 
 void goMotorAtAnalog(Emakefun_DCMotor port, int speed, uint16_t analog, char debug[] = "") {
   long angle = map(127.5 - Gamepad.Analog(analog), -127.5, 127.5, -speed, speed);
-  goMotor(port, angle);
+  goMotor(port, angle); 
   if (debug != "" && angle) {
     Serial.print(debug);
     Serial.print(':');
@@ -77,61 +47,39 @@ void goMotorAtAnalog(Emakefun_DCMotor port, int speed, uint16_t analog, char deb
   }
 }
 
-bool hasTouch(int port, char debug[] = "") {
-  return digitalRead(port);
-  if (debug != "") {
-    Serial.println(debug);
-  }
-}
 
 void gamepadMode() {
   Gamepad.read_gamepad(false, 0);
-  goMotorAtAnalog(RMotor, 255, PSS_RY, "right speed");
-  goMotorAtAnalog(LMotor, 255, PSS_LY, "left speed" );
-  goMotorAtButton(Taker1, 180, 90,  Taker1Status, PSB_CROSS   , "taker down", "taker zero");
-  goMotorAtButton(Taker2, 0,   90,  Taker2Status, PSB_CROSS   , "taker down", "taker zero");
-  goMotorAtButton(Taker1, 90,  0,   Taker1Status, PSB_TRIANGLE, "taker zero", "taker up"  );
-  goMotorAtButton(Taker2, 90,  180, Taker2Status, PSB_TRIANGLE, "taker zero", "taker up"  );
-  goMotorAtButton(Lift, 255, PSB_R2, PSB_R1, "lift down", "lift up");
+  if (Gamepad.Analog(PSS_RX) == 127) {
+    // position
+    goMotorAtAnalog(RMotor, 255, PSS_LY);
+    goMotorAtAnalog(LMotor, 255, PSS_LY);
+    goMotorAtAnalog(UMotor, 255, PSS_LX);
+    goMotorAtAnalog(DMotor, 255, PSS_LX);
+  } else {
+    // rotate
+    goMotorAtAnalog(RMotor,  255, PSS_RX);
+    goMotorAtAnalog(LMotor, -255, PSS_RX);
+    goMotorAtAnalog(UMotor,  255, PSS_RX);
+    goMotorAtAnalog(DMotor, -255, PSS_RX);
+  }
   delay(50);
 }
 
 
 void setup() {
   Serial.begin(115200);
+
   MotorDriver.begin(50);
   RMotor = *MotorDriver.getMotor(M1);
   LMotor = *MotorDriver.getMotor(M2);
-  Lift   = *MotorDriver.getMotor(M3);
-  Taker1 = *MotorDriver.getServo(1);
-  Taker2 = *MotorDriver.getServo(2);
-
-  goMotor(Taker1, 90); // ┐
-  goMotor(Taker2, 90); // ┴ taker to zero position
+  UMotor = *MotorDriver.getMotor(M3);
+  DMotor = *MotorDriver.getMotor(M4);
 
   Gamepad.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
-
-
-  if (Laser.begin()){
-    Serial.println("Matirx Laser Sensor activated");
-  }
-  else{
-    Serial.println("Matirx Laser Sensor activation failed");
-  }
-  if (MXColor1.begin()){
-    Serial.println("Matirx Color Sensor activated");
-  }
-  else{
-    Serial.println("Matirx Color Sensor activation failed");
-  }
-  MXColor1.setLight(true, true, 0);
-  MXColor1.setGamma(true);
-
 }
 
 void loop() {
   gamepadMode();
-  if (Laser.getDistance() <= 100) {
-    tone(A0, 600);
-  }
+
 }
