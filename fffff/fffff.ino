@@ -30,12 +30,12 @@ void goMotor(Emakefun_DCMotor port, int speed, char debug[] = "") {
   }
 }
 
-void goRobot(int xAxis,int yAxis, int rotate) {
-  goMotor(RMotor);
-  goMotor(LMotor);
-  goMotor(UMotor);
-  goMotor(DMotor);
-}
+//void goRobot(int xAxis,int yAxis, int rotate) {
+//  goMotor(RMotor);
+//  goMotor(LMotor);
+//  goMotor(UMotor);
+//  goMotor(DMotor);
+//}
 
 void goMotorAtAnalog(Emakefun_DCMotor port, int speed, uint16_t analog, char debug[] = "") {
   long angle = map(127.5 - Gamepad.Analog(analog), -127.5, 127.5, -speed, speed);
@@ -77,6 +77,13 @@ void setup() {
   DMotor = *MotorDriver.getMotor(M4);
 
   Gamepad.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
+//  while (!Gamepad.ButtonPressed(PSB_GREEN)) {
+//    Gamepad.read_gamepad(false, 0);
+//    tone(A0, 144);
+//  }
+
+  goMotor(LMotor,255);
+  delay(500);
 }
 
 void loop() {
