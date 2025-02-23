@@ -1,0 +1,25 @@
+begin	KEYWORD2
+
+Button	KEYWORD1
+Stick	KEYWORD1
+
+start	KEYWORD2
+select	KEYWORD2
+
+padRight	KEYWORD2
+padLeft	KEYWORD2
+padUp	KEYWORD2
+padDown	KEYWORD2
+
+circle	KEYWORD2
+rectangle	KEYWORD2
+triangle	KEYWORD2
+cross	KEYWORD2
+
+rightUp	KEYWORD2
+rightDown	KEYWORD2
+leftUp	KEYWORD2
+leftDown	KEYWORD2
+
+rightStick	KEYWORD2
+leftStick	KEYWORD2
