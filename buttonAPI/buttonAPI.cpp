@@ -29,8 +29,8 @@ class Stick {
       Y_stickID = Y_stickID;
       buttonID  = buttonID;
     }
-    int x() { Gamepad.Analog(X_stickID); }
-    int y() { Gamepad.Analog(Y_stickID); }
+    int x() { return Gamepad.Analog(X_stickID) - 127.5; }
+    int y() { return Gamepad.Analog(Y_stickID) - 127.5; }
     operator bool() { return Gamepad.Button(buttonID); }
   protected:
     uint16_t X_stickID;
