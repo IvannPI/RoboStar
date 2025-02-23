@@ -1,46 +1,52 @@
-#include <buttonAPI.cpp>
+#ifndef BUTTONAPI_H
+#define BUTTONAPI_H
 
+#include <PS2X_lib.h>
 
-void begin(void)
+extern PS2X Gamepad;
 
+void gamepadBegin();
+void gamepadUpdate();
 
 class Button {
   public:
-    Button(uint16_t);
-    operator bool(void);
+    Button(uint16_t buttonID);
+    operator bool() const;
   protected:
-    uint16_t;
+    uint16_t buttonID;
 };
 
 class Stick {
   public:
-    Stick(uint16_t, uint16_t, uint16_t);
-    int x(void);
-    int y(void);
-    operator bool(void);
+    Stick(uint16_t X_stickID, uint16_t Y_stickID, uint16_t buttonID);
+    int x() const;
+    int y() const;
+    operator bool() const;
   protected:
-    uint16_t;
-    uint16_t;
-    uint16_t;
+    uint16_t X_stickID;
+    uint16_t Y_stickID;
+    uint16_t buttonID;
 };
 
-Button start;
-Button select;
+extern Button start;
+extern Button select;
 
-Button padRight;
-Button padLeft;
-Button padUp;
-Button padDown;
+extern Button padRight;
+extern Button padLeft;
+extern Button padUp;
+extern Button padDown;
 
-Button circle;
-Button rectangle;
-Button triangle;
-Button cross;
+extern Button circle;
+extern Button rectangle;
+extern Button triangle;
+extern Button cross;
 
-Button rightUp;
-Button rightDown;
-Button leftUp;
-Button leftDown;
+extern Button rightUp;
+extern Button rightDown;
+extern Button leftUp;
+extern Button leftDown;
 
-Stick rightStick;
-Stick leftStick;
+extern Stick rightStick;
+extern Stick leftStick;
+
+#endif
