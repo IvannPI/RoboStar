@@ -54,7 +54,7 @@ bool hasTouch(int port) {
 void gamepadMode() {
   Gamepad.read_gamepad(false, 0);
   goMotor(RMotor, rightStick.y());
-  goMotor(LMotor, leftStick.y());
+  goMotor(LMotor, -leftStick.y());
   goMotorAtButton(Taker1, 180, 90, Taker1Status, cross);
   goMotorAtButton(Taker2, 0,   90, Taker2Status, cross);
   goMotorAtButton(Lift, 255, rightUp, rightDown);
