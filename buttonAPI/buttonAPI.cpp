@@ -30,8 +30,8 @@ Button::operator bool() const { gamepadUpdate(); return Gamepad.Button(buttonID)
 Stick::Stick(uint16_t X_stickID, uint16_t Y_stickID, uint16_t buttonID)
   : X_stickID(X_stickID), Y_stickID(Y_stickID), buttonID(buttonID) {}
 
-int Stick::x() const { gamepadUpdate(); 127.5 - return Gamepad.Analog(X_stickID); }
-int Stick::y() const { gamepadUpdate(); 127.5 - return Gamepad.Analog(Y_stickID); }
+int Stick::x() const { gamepadUpdate(); return Gamepad.Analog(X_stickID) - 127.5; }
+int Stick::y() const { gamepadUpdate(); return Gamepad.Analog(Y_stickID) - 127.5; }
 Stick::operator bool() const { gamepadUpdate(); return Gamepad.Button(buttonID); }
 
 Button start(PSB_START);
