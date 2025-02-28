@@ -73,11 +73,30 @@ void goMotorAtAnalog(Emakefun_DCMotor port, int speed, uint16_t analog, char deb
   }
 }
 
-bool hasTouch(int port, char debug[] = "") {
-  return digitalRead(port);
-  if (debug != "") {
-    Serial.println(debug);
-  }
+
+void AutoMode() {
+  goMotor(RMotor, 255);
+  delay(700);
+  goMotor(LMotor, 255);
+  delay(600);
+  goMotor(RMotor, 0);
+  goMotor(LMotor, 0);
+  goMotor(Taker1, 180);
+  goMotor(Taker2, 0);
+  delay(800);
+  
+  goMotor(Taker1, 90); // ┐
+  goMotor(Taker2, 90); // ┴ taker to zero position
+  goMotor(LMotor, -255);
+  delay(700);
+  goMotor(RMotor, -255);
+  delay(500);
+  goMotor(RMotor, 255);
+  delay(750);
+  goMotor(LMotor, 255);
+  delay(1300);
+  goMotor(RMotor, 0);
+  goMotor(LMotor, 0);
 }
 
 void gamepadMode() {
@@ -86,8 +105,6 @@ void gamepadMode() {
   goMotorAtAnalog(LMotor, 255, PSS_LY, "left speed" );
   goMotorAtButton(Taker1, 180, 90,  Taker1Status, PSB_CROSS   , "taker down", "taker zero");
   goMotorAtButton(Taker2, 0,   90,  Taker2Status, PSB_CROSS   , "taker down", "taker zero");
-  goMotorAtButton(Taker1, 90,  0,   Taker1Status, PSB_TRIANGLE, "taker zero", "taker up"  );
-  goMotorAtButton(Taker2, 90,  180, Taker2Status, PSB_TRIANGLE, "taker zero", "taker up"  );
   goMotorAtButton(Lift, 255, PSB_R2, PSB_R1, "lift down", "lift up");
   delay(50);
 }
@@ -102,10 +119,18 @@ void setup() {
   Taker1 = *MotorDriver.getServo(1);
   Taker2 = *MotorDriver.getServo(2);
 
+  Gamepad.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
+
   goMotor(Taker1, 90); // ┐
   goMotor(Taker2, 90); // ┴ taker to zero position
 
-  Gamepad.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
+
+  do {
+    Gamepad.read_gamepad(false, 0);
+    delay(50);
+  } while (!Gamepad.ButtonPressed(PSB_START));
+
+  AutoMode();
 }
 
 void loop() {
