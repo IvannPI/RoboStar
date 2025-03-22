@@ -1,6 +1,7 @@
 begin	KEYWORD2
 
 Button	KEYWORD1
+Axis    KEYWORD1
 Stick	KEYWORD1
 
 start	KEYWORD2

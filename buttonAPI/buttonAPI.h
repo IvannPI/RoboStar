@@ -3,10 +3,11 @@
 
 #include <PS2X_lib.h>
 
-extern PS2X Gamepad;
+static PS2X Gamepad;
 
-void gamepadBegin();
-void gamepadUpdate();
+extern void gamepadBegin();
+static unsigned long lastMillis;
+static void gamepadUpdate();
 
 class Button {
   public:
@@ -16,16 +17,24 @@ class Button {
     uint16_t buttonID;
 };
 
+class Axis {
+  public:
+    Axis(uint16_t axisID);
+    operator int() const;
+  protected:
+    uint16_t axisID;
+};
+
 class Stick {
   public:
     Stick(uint16_t X_stickID, uint16_t Y_stickID, uint16_t buttonID);
-    int x() const;
-    int y() const;
     operator bool() const;
+    int x;
+    int y;
   protected:
-    uint16_t X_stickID;
-    uint16_t Y_stickID;
-    uint16_t buttonID;
+    Axis X_stick;
+    Axis Y_stick;
+    Button button;
 };
 
 extern Button start;
